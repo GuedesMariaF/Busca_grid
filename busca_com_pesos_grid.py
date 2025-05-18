@@ -62,21 +62,21 @@ class buscaGridPeso(object):
                     
         return "Caminho não encontrado", None      
     
-    def greedy(self,inicio,fim,mapa,nx,ny):  
+    def greedy(self,origem,destino,mapa,nx,ny):  
         l1 = lista()
         l2 = lista()
         visitado = []
-        l1.insereUltimo(inicio,0,0,None)
-        l2.insereUltimo(inicio,0,0,None)
+        l1.insereUltimo(origem,0,0,None)
+        l2.insereUltimo(origem,0,0,None)
         linha = []
-        linha.append(inicio)
+        linha.append(origem)
         linha.append(0)
         visitado.append(linha)
         
         while l1.vazio() == False:
             atual = l1.deletaPrimeiro()
             
-            if atual.estado == fim:
+            if atual.estado == destino:
                 caminho = []
                 caminho = l2.exibeArvore2(atual.estado,atual.valor1)
                 #print("Cópia da árvore:\n",l2.exibeLista())
@@ -90,7 +90,7 @@ class buscaGridPeso(object):
                 valor.append(novo[1])
                 # CÁLCULO DO CUSTO DA ORIGEM ATÉ O NÓ ATUAL
                 v2 = atual.valor2 + novo[2]  # custo do caminho
-                v1 = fa.h(valor,fim) # f2(n)
+                v1 = fa.h(valor,destino) # f2(n)
 
                 flag1 = True
                 flag2 = True
@@ -114,21 +114,21 @@ class buscaGridPeso(object):
                     
         return "Caminho não encontrado", None
     
-    def a_estrela(self,inicio,fim,mapa,nx,ny):  
+    def a_estrela(self,origem,destino,mapa,nx,ny):  
         l1 = lista()
         l2 = lista()
         visitado = []
-        l1.insereUltimo(inicio,0,0,None)
-        l2.insereUltimo(inicio,0,0,None)
+        l1.insereUltimo(origem,0,0,None)
+        l2.insereUltimo(origem,0,0,None)
         linha = []
-        linha.append(inicio)
+        linha.append(origem)
         linha.append(0)
         visitado.append(linha)
         
         while l1.vazio() == False:
             atual = l1.deletaPrimeiro()
             
-            if atual.estado == fim:
+            if atual.estado == destino:
                 caminho = []
                 caminho = l2.exibeArvore2(atual.estado,atual.valor1)
                 print("Cópia da árvore:\n",l2.exibeLista())
@@ -142,7 +142,7 @@ class buscaGridPeso(object):
                 valor.append(novo[1])
                 # CÁLCULO DO CUSTO DA ORIGEM ATÉ O NÓ ATUAL
                 v2 = atual.valor2 + novo[2]  # custo do caminho
-                v1 = v2 + fa.h(valor,fim) # f3(n)
+                v1 = v2 + fa.h(valor,destino) # f3(n)
 
                 flag1 = True
                 flag2 = True
@@ -166,24 +166,24 @@ class buscaGridPeso(object):
                     
         return "Caminho não encontrado", None
 
-    def aia_estrela(self,inicio,fim,mapa,nx,ny,limite):  
+    def aia_estrela(self,origem,destino,mapa,nx,ny,limite):  
         
         while True:
             lim_exc = []
             l1 = lista()
             l2 = lista()
             visitado = []
-            l1.insereUltimo(inicio,0,0,None)
-            l2.insereUltimo(inicio,0,0,None)
+            l1.insereUltimo(origem,0,0,None)
+            l2.insereUltimo(origem,0,0,None)
             linha = []
-            linha.append(inicio)
+            linha.append(origem)
             linha.append(0)
             visitado.append(linha)
             
             while l1.vazio() == False:
                 atual = l1.deletaPrimeiro()
                 
-                if atual.estado == fim:
+                if atual.estado == destino:
                     caminho = []
                     caminho = l2.exibeArvore2(atual.estado,atual.valor1)
                     #print("Cópia da árvore:\n",l2.exibeLista())
@@ -198,7 +198,7 @@ class buscaGridPeso(object):
                     valor.append(novo[1])
                     # CÁLCULO DO CUSTO DA ORIGEM ATÉ O NÓ ATUAL
                     v2 = atual.valor2 + novo[2]  # custo do caminho
-                    v1 = v2 + fa.h(valor,fim) # f3(n)
+                    v1 = v2 + fa.h(valor,destino) # f3(n)
                     if v1<=limite:
                         flag1 = True
                         flag2 = True

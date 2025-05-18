@@ -84,7 +84,7 @@ def executar_busca(algoritmo, origem, destino, limite_profundidade=10):
     peso = None
     
     if algoritmo in ['a_estrela', 'aia_estrela', 'custo_uniforme', 'greedy']:
-        # Converter mapa para pesos (0 = livre, 1 = obstáculo)
+        #funcoes estavam aceita obstaculo 1 e livre 0
         mapa_peso = [[0 if cell == 9 else 1 for cell in row] for row in mapa]
         print("Mapa convertido (0=livre, 1=obstáculo):")
         for row in mapa_peso:
@@ -99,7 +99,7 @@ def executar_busca(algoritmo, origem, destino, limite_profundidade=10):
         elif algoritmo == 'greedy':
             caminho, peso = busca_peso.greedy(origem, destino, mapa_peso, nx, ny)
     else:
-        # Usar mapa original (9 = livre, 0 = obstáculo)
+  
         print("Mapa original (9=livre, 0=obstáculo):")
         print(mapa)
         

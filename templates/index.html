@@ -211,6 +211,11 @@
                     <option value="prof_limitada">Busca em Profundidade Limitada</option>
                     <option value="aprof_iterativo">Aprofundamento Iterativo</option>
                     <option value="bidirecional">Busca Bidirecional</option>
+                    <option value="custo_uniforme">Busca de Custo Uniforme</option>
+                    <option value="aia_estrela">Busca IDA*</option>
+                    <option value="a_estrela">Busca A*</option>
+                    <option value="greedy">Busca Gulosa</option>    
+
                 </select>
                 
                 <div class="depth-control" id="depthControl">
@@ -234,6 +239,13 @@
             } else {
                 depthControl.style.display = 'none';
                 document.getElementById('limite_profundidade').required = false;
+            }
+            if(algoritmo == 'aia_estrela'){
+                depthControl.style.display = 'block';
+                document.getElementById('limite').required = true;
+            }else{
+                depthControl.style.display = 'none';
+                document.getElementById('limite').required = false;
             }
         }
 

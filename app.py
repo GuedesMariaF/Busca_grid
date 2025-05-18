@@ -2,6 +2,9 @@ from flask import Flask, render_template, request
 import numpy as np
 from random import randrange
 from buscaGridNP import buscaGridNP
+from busca_com_pesos_grid import buscaGridPeso
+
+
 
 app = Flask(__name__)
 
@@ -22,6 +25,14 @@ ny = 10
 qtd_obstaculos = 10
 mapa = Gera_Problema(nx, ny, qtd_obstaculos)
 sol = buscaGridNP()
+busca_peso = buscaGridPeso()
+mapa_peso = [[0 if cell == 9 else 1 for cell in row] for row in mapa]
+print("Mapa sem pesos:")
+print(mapa)
+print("Mapa com pesos:")
+print(mapa_peso)
+caminho = []
+peso = 5
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -69,22 +80,44 @@ def index():
     return render_template('index.html', mapa=mapa.tolist())
 
 def executar_busca(algoritmo, origem, destino, limite_profundidade=10):
-    if algoritmo == 'amplitude':
-        caminho = sol.amplitude(origem, destino, nx, ny, mapa)
-    elif algoritmo == 'profundidade':
-        caminho = sol.profundidade(origem, destino, nx, ny, mapa)
-    elif algoritmo == 'prof_limitada':
-        caminho = sol.prof_limitada(origem, destino, nx, ny, mapa, limite_profundidade)
-    elif algoritmo == 'aprof_iterativo':
-        caminho = sol.aprof_iterativo(origem, destino, nx, ny, mapa, nx*ny)
-    elif algoritmo == 'bidirecional':
-        caminho = sol.bidirecional(origem, destino, nx, ny, mapa)
-
+    caminho = None
+    peso = None
+    
+    if algoritmo in ['a_estrela', 'aia_estrela', 'custo_uniforme', 'greedy']:
+        # Converter mapa para pesos (0 = livre, 1 = obstáculo)
+        mapa_peso = [[0 if cell == 9 else 1 for cell in row] for row in mapa]
+        print("Mapa convertido (0=livre, 1=obstáculo):")
+        for row in mapa_peso:
+            print(row)
+        print(ny, nx),
+        if algoritmo == 'a_estrela':
+            caminho, peso = busca_peso.a_estrela(origem, destino, mapa_peso, nx, ny)
+        elif algoritmo == 'aia_estrela':
+            caminho, peso = busca_peso.aia_estrela(origem, destino, mapa_peso, nx, ny, limite=limite_profundidade)
+        elif algoritmo == 'custo_uniforme':
+            caminho, peso = busca_peso.custo_uniforme(origem, destino, mapa_peso, nx, ny)
+        elif algoritmo == 'greedy':
+            caminho, peso = busca_peso.greedy(origem, destino, mapa_peso, nx, ny)
+    else:
+        # Usar mapa original (9 = livre, 0 = obstáculo)
+        print("Mapa original (9=livre, 0=obstáculo):")
+        print(mapa)
+        
+        if algoritmo == 'amplitude':
+            caminho = sol.amplitude(origem, destino, nx, ny, mapa)
+        elif algoritmo == 'profundidade':
+            caminho = sol.profundidade(origem, destino, nx, ny, mapa)
+        elif algoritmo == 'prof_limitada':
+            caminho = sol.prof_limitada(origem, destino, nx, ny, mapa, limite_profundidade)
+        elif algoritmo == 'aprof_iterativo':
+            caminho = sol.aprof_iterativo(origem, destino, nx, ny, mapa, nx*ny)
+        elif algoritmo == 'bidirecional':
+            caminho = sol.bidirecional(origem, destino, nx, ny, mapa)
+    
     return {
         'caminho': caminho if caminho is not None else [],
-        'custo': len(caminho) - 1 if caminho is not None else None,
-        'encontrado': caminho is not None
+        'custo': peso if peso is not None else (len(caminho) - 1 if caminho is not None else None),
+        'encontrado': caminho is not None and len(caminho) > 0
     }
-
 if __name__ == '__main__':
     app.run(debug=True)
